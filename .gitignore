@@ -1,0 +1,24 @@
+# Generated artifacts.
+outputs/**
+models/**
+checkpoints/**
+mlruns/
+mlflow.db
+*.pt
+*.pth
+*.ckpt
+*.onnx
+
+# Raw corpus is staged locally, not tracked in Git.
+assets/raw/corpus/**
+!assets/raw/corpus/
+!assets/raw/corpus/**/
+!assets/raw/corpus/README.md
+!assets/raw/corpus/**/README.md
+
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+.DS_Store
+Thumbs.db
