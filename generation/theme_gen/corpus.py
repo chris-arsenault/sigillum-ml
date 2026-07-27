@@ -13,7 +13,7 @@ from collections import defaultdict
 from pathlib import Path
 from typing import Sequence
 
-from framework.foundation import paths as _paths
+from generation import project_paths as _paths
 from generation.theme_gen._common import MelodyItem
 
 _INGEST_SUFFIXES = (".mid", ".midi", ".musicxml", ".xml")

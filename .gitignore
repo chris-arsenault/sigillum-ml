@@ -12,9 +12,9 @@ mlflow.db
 # Raw corpus is staged locally, not tracked in Git.
 assets/raw/corpus/**
 !assets/raw/corpus/
-!assets/raw/corpus/**/
+!assets/raw/corpus/*/
 !assets/raw/corpus/README.md
-!assets/raw/corpus/**/README.md
+!assets/raw/corpus/*/README.md
 
 __pycache__/
 *.pyc

@@ -14,7 +14,7 @@ import numpy as np
 import torch
 from music21 import instrument, note as m21note, pitch as m21p, stream, tempo
 
-from framework.foundation.paths import SKETCH_OUTPUTS
+from generation.project_paths import SKETCH_OUTPUTS
 from generation.fractal.dataset import CHAR_IDX, HARM_IDX, melody_windows
 from generation.fractal.model import Denoiser, discretize, make_schedule, sample
 from generation.fractal.roll import C, FLAT_VEL, P, VEL, melody_to_roll, roll_to_melody, strip_ornaments

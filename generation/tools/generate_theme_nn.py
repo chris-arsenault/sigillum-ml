@@ -10,10 +10,10 @@ kernel. Output: outputs/sketches/theme_nn/<name>.{mid,musicxml}.
 import argparse
 from pathlib import Path
 
-from music21 import instrument, pitch as m21pitch
+from music21 import pitch as m21pitch
 
-from framework.foundation.paths import SKETCH_OUTPUTS
-from framework.foundation.score import mk_part, mk_score, rest_bars, tag
+from generation.partitura_bridge import export_score, single_part_score
+from generation.project_paths import SKETCH_OUTPUTS
 from generation.theme_nn.generate import generate_melody, load_model
 
 CHECKPOINT = Path(__file__).resolve().parents[2] / "outputs" / "models" / "theme_nn"
@@ -29,6 +29,15 @@ def _key_pc(name: str) -> int:
 
 def _score_items(melody):
     return [(None if m is None else m21pitch.Pitch(midi=m).nameWithOctave, round(d, 4)) for m, d in melody]
+
+
+def _label_first_sounding(items, label):
+    labelled = [tuple(item) for item in items]
+    for index, item in enumerate(labelled):
+        if item[0] is not None:
+            labelled[index] = (*item, f"txt:{label.replace(' ', '_')}")
+            break
+    return labelled
 
 
 def main(argv=None):
@@ -64,23 +73,21 @@ def main(argv=None):
                                  seed=args.seed + i)
         block = _score_items(melody)
         if block:
-            items += tag(block, f"txt:{label}") + rest_bars(1)
+            items.extend(_label_first_sounding(block, label))
+            items.append((None, 4.0))
 
-    total = sum(float(it[1]) for it in items)
-    score = mk_score(f"{args.name}", "4/4", args.key,
-                     [mk_part("theme", instrument.Flute(), items, validate_ql=total)],
-                     tempo_events=[(0, args.tempo)])
+    score = single_part_score(
+        title=args.name,
+        items=items,
+        meter="4/4",
+        key=args.key,
+        tempo=args.tempo,
+        beats_per_bar=4.0,
+    )
     out_dir = SKETCH_OUTPUTS / "theme_nn"
-    out_dir.mkdir(parents=True, exist_ok=True)
-    midi = out_dir / f"{args.name}.mid"
-    score.write("midi", fp=str(midi))           # MIDI is the point — free durations play fine
+    xml, midi = export_score(score, out_dir, args.name)
     print(f"wrote {midi}")
-    try:                                          # notation is best-effort (free durations rarely tile)
-        xml = out_dir / f"{args.name}.musicxml"
-        score.write("musicxml", fp=str(xml))
-        print(f"wrote {xml}")
-    except Exception as exc:  # noqa
-        print(f"musicxml skipped (inexpressible durations): {exc}")
+    print(f"wrote {xml}")
 
 
 if __name__ == "__main__":

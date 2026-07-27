@@ -16,7 +16,7 @@ exotic / classical / arabian / themes / music21 / ingest[:<subdir>] / any catego
 import argparse
 from pathlib import Path
 
-from framework.foundation.paths import model_output
+from generation.project_paths import model_output
 from generation.theme_gen.corpus import load_corpus
 from generation.theme_gen.model import MarkovMelodyModel
 from generation.theme_gen.model_specs import MODEL_SPECS, ModelSpec, get_spec

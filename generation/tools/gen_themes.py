@@ -13,11 +13,8 @@ import importlib.util
 import os
 from pathlib import Path
 
-from music21 import instrument
-
-from framework.foundation.exports import write_score_pair, write_text
-from framework.foundation.paths import SKETCH_OUTPUTS, model_output
-from framework.foundation.score import legato, mk_part, mk_score, rest_bars, tag
+from generation.partitura_bridge import export_score, single_part_score
+from generation.project_paths import SKETCH_OUTPUTS, model_output
 from generation.theme_gen import (
     GenerationTrace,
     generate_theme_batch,
@@ -76,36 +73,47 @@ def generate(kernel, *, seed=None, pool=144, batch=12, model=None, trace=None):
     )
 
 
+def _label_first_sounding(items, label):
+    labelled = [tuple(item) for item in items]
+    for index, item in enumerate(labelled):
+        if item[0] is not None:
+            labelled[index] = (*item, f"txt:{label.replace(' ', '_')}")
+            break
+    return labelled
+
+
 def build_score(candidates, kernel, title):
     """Render the candidate spread as labelled blocks, 1-bar rests between (audition layout)."""
-    span = kernel.frame.bars * kernel.frame.beats_per_bar
     items = []
     for index, candidate in enumerate(candidates, 1):
-        block = legato(list(candidate.items), span)
-        items += tag(block, f"txt:CAND {index}") + rest_bars(1, beats=kernel.frame.beats_per_bar)
-    total = sum(float(item[1]) for item in items)
-    return mk_score(
-        title,
-        kernel.frame.meter,
-        kernel.frame.key,
-        [mk_part("theme", instrument.Flute(), items, validate_ql=total)],
-        tempo_events=[(0, 76)],
+        items.extend(_label_first_sounding(candidate.items, f"CAND_{index}"))
+        items.append((None, kernel.frame.beats_per_bar))
+    return single_part_score(
+        title=title,
+        items=items,
+        meter=kernel.frame.meter,
+        key=kernel.frame.key,
+        tempo=76,
+        beats_per_bar=kernel.frame.beats_per_bar,
     )
 
 
 def build_audition_score(per_model, kernel, title, tempo):
     """One score surveying a kernel across models: each block is ``<model> <n>``."""
-    span = kernel.frame.bars * kernel.frame.beats_per_bar
     items = []
     for model_name, candidates, _used, _trace in per_model:
         for index, candidate in enumerate(candidates, 1):
-            block = legato(list(candidate.items), span)
-            items += tag(block, f"txt:{model_name} {index}") + rest_bars(1, beats=kernel.frame.beats_per_bar)
-    total = sum(float(item[1]) for item in items)
-    return mk_score(
-        title, kernel.frame.meter, kernel.frame.key,
-        [mk_part("theme", instrument.Flute(), items, validate_ql=total)],
-        tempo_events=[(0, tempo)],
+            items.extend(
+                _label_first_sounding(candidate.items, f"{model_name}_{index}")
+            )
+            items.append((None, kernel.frame.beats_per_bar))
+    return single_part_score(
+        title=title,
+        items=items,
+        meter=kernel.frame.meter,
+        key=kernel.frame.key,
+        tempo=tempo,
+        beats_per_bar=kernel.frame.beats_per_bar,
     )
 
 
@@ -139,8 +147,10 @@ def run_audition(name, out=None):
 
     out_dir = Path(out) if out else (SKETCH_OUTPUTS / "auditions")
     score = build_audition_score(per_model, kernel, f"{name} model survey", spec.tempo)
-    xml, midi = write_score_pair(score, out_dir, name)
-    report = write_text(out_dir / f"{name}.md", _audition_report(name, spec, per_model, kernel))
+    xml, midi = export_score(score, out_dir, name)
+    report = Path(out_dir) / f"{name}.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(_audition_report(name, spec, per_model, kernel), encoding="utf-8")
     print(f"wrote {xml}\nwrote {midi}\nwrote {report}")
     for model_name, candidates, used, _trace in per_model:
         print(f"  {model_name:20s} {len(candidates)} candidates{'' if used else '  (model not built; repo-theme fallback)'}")
@@ -181,8 +191,10 @@ def main(argv=None):
     out_dir = Path(args.out) if args.out else (SKETCH_OUTPUTS / "themes")
 
     score = build_score(candidates, kernel, f"{stem} kernel candidates")
-    xml, midi = write_score_pair(score, out_dir, stem)
-    report = write_text(out_dir / f"{stem}.md", render_candidate_report(candidates, kernel, trace))
+    xml, midi = export_score(score, out_dir, stem)
+    report = Path(out_dir) / f"{stem}.md"
+    report.parent.mkdir(parents=True, exist_ok=True)
+    report.write_text(render_candidate_report(candidates, kernel, trace), encoding="utf-8")
     print(f"wrote {xml}\nwrote {midi}\nwrote {report}")
     return candidates
 

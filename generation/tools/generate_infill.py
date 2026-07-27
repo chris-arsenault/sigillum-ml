@@ -8,10 +8,10 @@ outputs/sketches/theme_nn/m1_infill.mid.
 import argparse
 from pathlib import Path
 
-from music21 import instrument, pitch as m21pitch
+from music21 import pitch as m21pitch
 
-from framework.foundation.paths import SKETCH_OUTPUTS
-from framework.foundation.score import mk_part, mk_score, rest_bars, tag
+from generation.partitura_bridge import export_score, single_part_score
+from generation.project_paths import SKETCH_OUTPUTS
 from generation.theme_nn.generate_infill import fill, load_model, to_melody
 from generation.theme_nn.representation import encode
 
@@ -23,6 +23,15 @@ def _anchor(items, key):
     midi_items = [(int(m21pitch.Pitch(p).midi), d) for p, d in items]
     return [(0 if e.kind == "rest" else e.degree, e.alteration, e.octave, e.duration)
             for e in encode(midi_items, key)]
+
+
+def _label_first_sounding(items, label):
+    labelled = [tuple(item) for item in items]
+    for index, item in enumerate(labelled):
+        if item[0] is not None:
+            labelled[index] = (*item, f"txt:{label.replace(' ', '_')}")
+            break
+    return labelled
 
 
 def m1_spec():
@@ -54,15 +63,21 @@ def main(argv=None):
         print(f"fill {i}: {len(block)} events, {total_beats:.1f} beats "
               f"(kernel wants 64) — head pinned, apex pinned")
         if block:
-            items += tag(block, f"txt:M1 infill {i}  t{args.temp}") + rest_bars(1)
+            items.extend(
+                _label_first_sounding(block, f"M1_infill_{i}_t{args.temp}")
+            )
+            items.append((None, 4.0))
 
-    total = sum(float(it[1]) for it in items)
-    score = mk_score("m1_infill", "4/4", "F",
-                     [mk_part("theme", instrument.Flute(), items, validate_ql=total)],
-                     tempo_events=[(0, args.tempo)])
-    out_dir = SKETCH_OUTPUTS / "theme_nn"; out_dir.mkdir(parents=True, exist_ok=True)
-    midi = out_dir / "m1_infill.mid"
-    score.write("midi", fp=str(midi))
+    score = single_part_score(
+        title="m1_infill",
+        items=items,
+        meter="4/4",
+        key="F",
+        tempo=args.tempo,
+        beats_per_bar=4.0,
+    )
+    out_dir = SKETCH_OUTPUTS / "theme_nn"
+    _xml, midi = export_score(score, out_dir, "m1_infill")
     print(f"wrote {midi}")
 
 

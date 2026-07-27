@@ -16,9 +16,15 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from framework.analysis.tonal import SCALE_OFFSETS
-
 MelodyItem = tuple[int | None, float]
+
+# This vocabulary is part of the ML token representation, not a general-purpose
+# score-analysis implementation. Minor uses a raised seventh so the dominant
+# retains its functional leading tone.
+SCALE_OFFSETS = {
+    "major": (0, 2, 4, 5, 7, 9, 11),
+    "minor": (0, 2, 3, 5, 7, 8, 11),
+}
 
 
 @dataclass(frozen=True)

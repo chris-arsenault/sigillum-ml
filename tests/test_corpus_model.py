@@ -4,9 +4,9 @@ import unittest
 from pathlib import Path
 from unittest import mock
 
-from music21 import pitch as m21pitch
+from music21 import chord, instrument, note, pitch as m21pitch, stream
 
-from framework.foundation import paths as _paths
+from generation import project_paths as _paths
 from generation.theme_gen.corpus import (
     default_theme_corpus,
     ingest_dir,
@@ -24,6 +24,20 @@ from generation.theme_gen.model import (
 
 ROOT = Path(__file__).resolve().parents[1]
 SAMPLE_MIDI = ROOT / "assets" / "raw" / "incoming" / "s_first4.mid"
+
+
+def _music21_part(name, part_instrument, items):
+    part = stream.Part(id=name)
+    part.partName = name
+    part.insert(0, part_instrument)
+    for pitches, duration in items:
+        event = (
+            chord.Chord(pitches, quarterLength=duration)
+            if isinstance(pitches, list)
+            else note.Note(pitches, quarterLength=duration)
+        )
+        part.append(event)
+    return part
 
 
 class IngestionTests(unittest.TestCase):
@@ -45,18 +59,26 @@ class IngestionTests(unittest.TestCase):
     def test_picks_lead_over_bass_and_chords(self):
         # Multi-track MIDI like NES VGM: a low bass, a mid chordal pad, and a high lead.
         # The extractor must return the LEAD line, not the bass or the (denser) chords.
-        from music21 import instrument
-
-        from framework.foundation.score import mk_part, mk_score
-
         lead_pitches = ["C5", "D5", "E5", "F5", "G5", "A5", "G5", "E5"]
-        bass = mk_part("bass", instrument.AcousticBass(),
-                       [("C2", 1.0), ("E2", 1.0), ("G2", 1.0), ("C2", 1.0)] * 2)
-        lead = mk_part("lead", instrument.Flute(), [(p, 1.0) for p in lead_pitches])
-        chords = mk_part("chords", instrument.Piano(),
-                         [(["C4", "E4", "G4"], 2.0), (["F4", "A4", "C5"], 2.0),
-                          (["G4", "B4", "D5"], 2.0), (["C4", "E4", "G4"], 2.0)])
-        score = mk_score("multi", "4/4", "C", [bass, lead, chords], tempo_events=[(0, 120)])
+        bass = _music21_part(
+            "bass",
+            instrument.AcousticBass(),
+            [("C2", 1.0), ("E2", 1.0), ("G2", 1.0), ("C2", 1.0)] * 2,
+        )
+        lead = _music21_part(
+            "lead", instrument.Flute(), [(pitch, 1.0) for pitch in lead_pitches]
+        )
+        chords = _music21_part(
+            "chords",
+            instrument.Piano(),
+            [
+                (["C4", "E4", "G4"], 2.0),
+                (["F4", "A4", "C5"], 2.0),
+                (["G4", "B4", "D5"], 2.0),
+                (["C4", "E4", "G4"], 2.0),
+            ],
+        )
+        score = stream.Score((bass, lead, chords))
         with tempfile.TemporaryDirectory() as tmp:
             path = Path(tmp) / "multi.mid"
             score.write("midi", fp=str(path))

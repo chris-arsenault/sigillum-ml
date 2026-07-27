@@ -13,7 +13,6 @@ from pathlib import Path
 import torch
 import torch.nn.functional as F
 
-from framework.analysis.tonal import SCALE_OFFSETS
 from generation.theme_nn.infill import ALT_SIZE, BAR_SIZE, BEAT_SIZE, IKIND, InfillVocab, _gap_bin
 from generation.theme_nn.model_infill import FactoredEncDec, InfillConfig
 from generation.theme_nn.representation import Event, decode

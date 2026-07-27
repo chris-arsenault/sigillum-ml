@@ -1,0 +1,377 @@
+{
+  "schema_version": 1,
+  "data_root": "assets/raw/corpus/whole_score",
+  "views": {
+    "research_full": [
+      {"source_id": "openscore_orchestra", "selection": "all"},
+      {"source_id": "s3_symbolic_symphonies", "selection": "all"},
+      {"source_id": "pod", "selection": "all"},
+      {"source_id": "sod", "selection": "all"},
+      {"source_id": "pdmx", "selection": "all"},
+      {"source_id": "openscore_lieder", "selection": "all"},
+      {"source_id": "openscore_string_quartets", "selection": "all"},
+      {"source_id": "symphonynet", "selection": "all"},
+      {"source_id": "musedata_haydn_symphonies", "selection": "all"},
+      {"source_id": "musedata_bach_brandenburg", "selection": "all"},
+      {"source_id": "musedata_mozart_quartets", "selection": "all"},
+      {"source_id": "musedata_haydn_quartets", "selection": "all"},
+      {"source_id": "musedata_beethoven_quartets", "selection": "all"},
+      {"source_id": "musedata_corelli", "selection": "all"},
+      {"source_id": "musedata_vivaldi", "selection": "all"}
+    ],
+    "redistributable_clean": [
+      {"source_id": "openscore_orchestra", "selection": "scores_only"},
+      {"source_id": "s3_symbolic_symphonies", "selection": "repository"},
+      {"source_id": "pdmx", "selection": "no_license_conflict"},
+      {"source_id": "openscore_lieder", "selection": "all"},
+      {"source_id": "openscore_string_quartets", "selection": "all"}
+    ]
+  },
+  "unresolved_sources": [
+    {
+      "id": "kernscores",
+      "title": "KernScores",
+      "homepage": "https://kern.humdrum.org/",
+      "status": "unreachable",
+      "note": "The historical host did not accept a connection on 2026-07-27. Related MuseData repositories are fetched separately, but are not assumed to be a complete mirror."
+    },
+    {
+      "id": "musedata_full",
+      "title": "MuseData full classical database",
+      "homepage": "https://musedata.org/",
+      "status": "partially_moved",
+      "note": "The site is online, but no single current full-database archive was exposed. Available composer repositories from the musedata GitHub organization are registered separately."
+    }
+  ],
+  "sources": [
+    {
+      "id": "openscore_orchestra",
+      "title": "OpenScore Orchestra and Hauptstimme",
+      "homepage": "https://github.com/MarkGotham/Hauptstimme",
+      "roles": ["orchestral_gold", "theme_salience", "full_score_structure"],
+      "rights": {
+        "tier": "clean_with_layered_annotations",
+        "scores": "CC0-1.0",
+        "annotations": "CC-BY-SA-4.0",
+        "code": "MIT"
+      },
+      "version": {
+        "label": "v1.0.1",
+        "commit": "45edea23b6fcb9e64a8d56b0d86b9cdfb99614f7"
+      },
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/MarkGotham/Hauptstimme/archive/45edea23b6fcb9e64a8d56b0d86b9cdfb99614f7.tar.gz",
+          "filename": "Hauptstimme-v1.0.1.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "s3_symbolic_symphonies",
+      "title": "S3 Symbolic Symphony Set",
+      "homepage": "https://github.com/iis-mctl/mctl-symphony-dataset",
+      "roles": ["form_supervision", "phrase_supervision", "orchestral_roles"],
+      "rights": {
+        "tier": "clean",
+        "repository": "MIT"
+      },
+      "version": {
+        "label": "git-2026-07-27",
+        "commit": "f845a46314fc603259bbe9bdf773a7bb2d235295"
+      },
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/iis-mctl/mctl-symphony-dataset/archive/f845a46314fc603259bbe9bdf773a7bb2d235295.tar.gz",
+          "filename": "s3-f845a463.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "pod",
+      "title": "Projective Orchestral Database",
+      "homepage": "https://qsdfo.github.io/LOP/database.html",
+      "roles": ["paired_reduction_orchestration", "refinement_operator"],
+      "rights": {
+        "tier": "research",
+        "note": "Legacy academic distribution; no explicit corpus license located."
+      },
+      "version": {
+        "label": "LOP_database_06_09_17",
+        "last_modified": "2018-11-07"
+      },
+      "artifacts": [
+        {
+          "id": "dataset",
+          "url": "https://qsdfo.github.io/LOP/database/LOP_database_06_09_17.zip",
+          "filename": "LOP_database_06_09_17.zip",
+          "expected_bytes": 4800231,
+          "extract_to": "dataset"
+        }
+      ]
+    },
+    {
+      "id": "sod",
+      "title": "Symbolic Orchestral Database",
+      "homepage": "https://qsdfo.github.io/LOP/database.html",
+      "roles": ["orchestral_pretraining", "multitrack_generation"],
+      "rights": {
+        "tier": "research",
+        "note": "Legacy academic distribution with mixed upstream sources; no explicit corpus license located."
+      },
+      "version": {
+        "label": "legacy-site-archive",
+        "last_modified": "2018-11-07"
+      },
+      "artifacts": [
+        {
+          "id": "dataset",
+          "url": "https://qsdfo.github.io/LOP/database/SOD.zip",
+          "filename": "SOD.zip",
+          "expected_bytes": 44811512,
+          "extract_to": "dataset"
+        }
+      ]
+    },
+    {
+      "id": "pdmx",
+      "title": "Public Domain MusicXML",
+      "homepage": "https://github.com/pnlong/PDMX",
+      "roles": ["large_scale_pretraining", "composer_style", "multitrack_notation"],
+      "rights": {
+        "tier": "mixed_public_domain_metadata",
+        "clean_selection": "subset:no_license_conflict",
+        "note": "The research view retains license-conflict rows; the clean view excludes them."
+      },
+      "version": {
+        "label": "Zenodo record 14648209",
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "artifacts": [
+        {
+          "id": "catalog",
+          "url": "https://zenodo.org/records/14648209/files/PDMX.csv",
+          "filename": "PDMX.csv",
+          "expected_bytes": 209574867,
+          "expected_digest": "md5:10ba2b34f5ae3652109c5a43a9ea4592"
+        },
+        {
+          "id": "metadata",
+          "url": "https://zenodo.org/records/14648209/files/metadata.tar.gz",
+          "filename": "metadata.tar.gz",
+          "expected_bytes": 159444765,
+          "expected_digest": "md5:5bc79445090dd2fe5e96cffa77a3461c",
+          "extract_to": "metadata"
+        },
+        {
+          "id": "subset_paths",
+          "url": "https://zenodo.org/records/14648209/files/subset_paths.tar.gz",
+          "filename": "subset_paths.tar.gz",
+          "expected_bytes": 29258721,
+          "expected_digest": "md5:3ed2ecc4a09b753b8d3e44ac24a150b8",
+          "extract_to": "subset_paths"
+        },
+        {
+          "id": "musicxml",
+          "url": "https://zenodo.org/records/14648209/files/mxl.tar.gz",
+          "filename": "mxl.tar.gz",
+          "expected_bytes": 1894335797,
+          "expected_digest": "md5:49ffd75ecf5489c0be6d41182eb11ff7",
+          "extract_to": "musicxml"
+        }
+      ]
+    },
+    {
+      "id": "openscore_lieder",
+      "title": "OpenScore Lieder Corpus",
+      "homepage": "https://github.com/OpenScore/Lieder",
+      "roles": ["phrase_structure", "material_identity", "voice_leading"],
+      "rights": {
+        "tier": "clean",
+        "scores": "CC0-1.0"
+      },
+      "version": {
+        "label": "git-2026-07-27",
+        "commit": "6b2dc542ce2e8aa4b78c8ee62103b210efc07015"
+      },
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/OpenScore/Lieder/archive/6b2dc542ce2e8aa4b78c8ee62103b210efc07015.tar.gz",
+          "filename": "openscore-lieder-6b2dc542.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "openscore_string_quartets",
+      "title": "OpenScore String Quartets",
+      "homepage": "https://github.com/OpenScore/StringQuartets",
+      "roles": ["counterpoint", "phrase_structure", "ensemble_texture"],
+      "rights": {
+        "tier": "clean",
+        "scores": "CC0-1.0"
+      },
+      "version": {
+        "label": "git-2026-07-27",
+        "commit": "d13289cd70797da94646e5cf64f7296a4c4fee40"
+      },
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/OpenScore/StringQuartets/archive/d13289cd70797da94646e5cf64f7296a4c4fee40.tar.gz",
+          "filename": "openscore-quartets-d13289cd.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "symphonynet",
+      "title": "SymphonyNet Dataset",
+      "homepage": "https://symphonynet.github.io/",
+      "roles": ["midi_auxiliary", "large_scale_multitrack"],
+      "rights": {
+        "tier": "research",
+        "note": "Personal research corpus; mixed repertoire and no explicit dataset license found."
+      },
+      "version": {
+        "label": "Google Drive distribution checked 2026-07-27"
+      },
+      "artifacts": [
+        {
+          "id": "dataset",
+          "url": "https://drive.usercontent.google.com/download?id=1j9Pvtzaq8k_QIPs8e2ikvCR-BusPluTb&export=download&confirm=t",
+          "filename": "SymphonyNet_Dataset.tar.gz",
+          "expected_bytes": 435631658,
+          "extract_to": "dataset"
+        }
+      ]
+    },
+    {
+      "id": "musedata_haydn_symphonies",
+      "title": "MuseData Humdrum Haydn Symphonies",
+      "homepage": "https://github.com/musedata/humdrum-haydn-symphonies",
+      "roles": ["classical_symphonies", "humdrum_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "fa453a295003bb13d6f75fb920064c1dcdb80be5"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/humdrum-haydn-symphonies/archive/fa453a295003bb13d6f75fb920064c1dcdb80be5.tar.gz",
+          "filename": "haydn-symphonies-fa453a29.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_bach_brandenburg",
+      "title": "MuseData Humdrum Bach Brandenburg Concertos",
+      "homepage": "https://github.com/musedata/humdrum-bach-brandenburg",
+      "roles": ["baroque_orchestra", "humdrum_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "ec7aa22c9f2748351a9fc2e3015a62a89f157d87"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/humdrum-bach-brandenburg/archive/ec7aa22c9f2748351a9fc2e3015a62a89f157d87.tar.gz",
+          "filename": "bach-brandenburg-ec7aa22c.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_mozart_quartets",
+      "title": "MuseData Humdrum Mozart Quartets",
+      "homepage": "https://github.com/musedata/humdrum-mozart-quartets",
+      "roles": ["classical_counterpoint", "humdrum_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "a56fda43a1c03a634881bf66d5710d3268c7a17e"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/humdrum-mozart-quartets/archive/a56fda43a1c03a634881bf66d5710d3268c7a17e.tar.gz",
+          "filename": "mozart-quartets-a56fda43.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_haydn_quartets",
+      "title": "MuseData Humdrum Haydn Quartets",
+      "homepage": "https://github.com/musedata/humdrum-haydn-quartets",
+      "roles": ["classical_counterpoint", "humdrum_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "3047e9958ad0b326890411d21c8b74e54c6a6b6c"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/humdrum-haydn-quartets/archive/3047e9958ad0b326890411d21c8b74e54c6a6b6c.tar.gz",
+          "filename": "haydn-quartets-3047e995.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_beethoven_quartets",
+      "title": "MuseData Beethoven Quartets",
+      "homepage": "https://github.com/musedata/beethoven-quartets",
+      "roles": ["classical_counterpoint", "musedata_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "fbc9525a5790caa225e307a766af58f83da8cd76"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/beethoven-quartets/archive/fbc9525a5790caa225e307a766af58f83da8cd76.tar.gz",
+          "filename": "beethoven-quartets-fbc9525a.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_corelli",
+      "title": "MuseData Corelli",
+      "homepage": "https://github.com/musedata/corelli",
+      "roles": ["baroque_ensemble", "musedata_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "cec0669c0f73f0763b6d6e4acb9fa6971408deb0"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/corelli/archive/cec0669c0f73f0763b6d6e4acb9fa6971408deb0.tar.gz",
+          "filename": "corelli-cec0669c.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    },
+    {
+      "id": "musedata_vivaldi",
+      "title": "MuseData Vivaldi",
+      "homepage": "https://github.com/musedata/vivaldi",
+      "roles": ["baroque_orchestra", "musedata_source"],
+      "rights": {"tier": "research", "note": "No asserted repository license."},
+      "version": {"commit": "597599eaca276f1911ae6386b9474615619d7940"},
+      "artifacts": [
+        {
+          "id": "repository",
+          "url": "https://github.com/musedata/vivaldi/archive/597599eaca276f1911ae6386b9474615619d7940.tar.gz",
+          "filename": "vivaldi-597599ea.tar.gz",
+          "extract_to": "repository",
+          "strip_components": 1
+        }
+      ]
+    }
+  ]
+}

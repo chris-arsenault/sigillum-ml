@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "kind": "whole_score_benchmark",
+  "benchmark_id": "whole-score-v1-smoke",
+  "revision": 1,
+  "title": "Whole-score evaluation contract smoke suite",
+  "manifest_digest": "sha256:2811322e47c99c561edc529d55d2d40b97b8a90d7f5eb35f979134dfe89c39a7",
+  "seeds": [
+    1729
+  ],
+  "cases": [
+    {
+      "case_id": "kernel-study",
+      "brief": {
+        "path": "experiments/whole_score/v1_smoke/briefs/kernel_study.md",
+        "digest": "sha256:b9fb74756078eb1991f188c03ffc1e375f7b816ca08a1144a5c5c8aef6700876"
+      },
+      "starting_score": {
+        "path": "tests/fixtures/composition_kernel_study.rb",
+        "digest": "sha256:bfac141274b19a35c568ee752b908a6392d935e22f71659c0637959834dcd157"
+      }
+    }
+  ],
+  "strategies": [
+    {
+      "strategy_id": "one_shot",
+      "description": "Generate one completed score from the frozen brief without recursive refinement."
+    },
+    {
+      "strategy_id": "fixed_agent_like",
+      "description": "Use the frozen agent-derived stage ordering without adaptive target scheduling."
+    },
+    {
+      "strategy_id": "deterministic_graph",
+      "description": "Use Partitura's deterministic dependency-aware graph scheduler."
+    }
+  ],
+  "ablations": [
+    {
+      "ablation_id": "no_whole_score_critic",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Disable whole-score critic evidence."
+    },
+    {
+      "ablation_id": "no_seam_critic",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Disable seam critic evidence."
+    },
+    {
+      "ablation_id": "no_periodic_global_review",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Disable periodic whole-score review actions."
+    },
+    {
+      "ablation_id": "no_exact_material_carry_forward",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Hide exact upstream material realization from downstream proposals."
+    },
+    {
+      "ablation_id": "no_candidate_branching",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Permit only one proposed candidate per action."
+    },
+    {
+      "ablation_id": "no_original_as_candidate",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Remove the unchanged score from selection while retaining mechanical validation."
+    },
+    {
+      "ablation_id": "shared_critic_context",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Share proposal context with critics instead of independently conditioning them."
+    },
+    {
+      "ablation_id": "expert_features_only",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Use only fixed Partitura diagnostic projections."
+    },
+    {
+      "ablation_id": "learned_features_only",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Hide fixed expert projections from learned critics."
+    },
+    {
+      "ablation_id": "no_post_export_review",
+      "strategy_ids": [
+        "deterministic_graph"
+      ],
+      "description": "Disable review of rendered MusicXML and MIDI."
+    }
+  ],
+  "metrics": [
+    "human.coherence",
+    "human.identity",
+    "human.seams",
+    "human.orchestration",
+    "human.reserve",
+    "human.overall",
+    "mechanical.validity",
+    "diagnostic.requirement_binding",
+    "diagnostic.identity",
+    "diagnostic.seams",
+    "edit_efficiency",
+    "diversity"
+  ],
+  "human_criteria": [
+    "coherence",
+    "identity",
+    "seams",
+    "orchestration",
+    "reserve",
+    "overall"
+  ]
+}

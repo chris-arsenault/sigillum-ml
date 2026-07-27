@@ -1,0 +1,208 @@
+{
+  "schema_version": 1,
+  "dataset_id": "whole_score_annotation_semantics_pilot_v1",
+  "annotation_schema_version": 1,
+  "data_root": "assets/raw/corpus/whole_score",
+  "observation_manifest": "outputs/datasets/whole_score/pilot_v1/manifest.json",
+  "expected_observation_manifest_digest": "sha256:c3f5434fc14126b77dbd83fe2dcd960d38db9e2ae76892934e7a57d3d3f2edb8",
+  "output_root": "outputs/datasets/whole_score/annotation_semantics_v1",
+  "profiles": [
+    {
+      "collection_id": "openscore_orchestra_gold",
+      "profile": "openscore_hauptstimme_v1",
+      "input_kinds": [
+        "hauptstimme_annotations",
+        "part_relations"
+      ],
+      "reference_only_kinds": [
+        "prominent_line_score"
+      ]
+    },
+    {
+      "collection_id": "s3_annotated_symphonies",
+      "profile": "s3_v1",
+      "input_kinds": [
+        "s3_form",
+        "s3_cadence",
+        "s3_harmony",
+        "s3_orchestral_texture",
+        "s3_downbeats",
+        "s3_time_signature",
+        "s3_measure_count"
+      ],
+      "reference_only_kinds": [
+        "s3_note_events",
+        "s3_note_played"
+      ]
+    }
+  ],
+  "targets": [
+    {
+      "id": "structural_part_relation",
+      "kind": "representation",
+      "representation_target": "structural_relationships",
+      "availability": "supported",
+      "source": "OpenScore derived part-relations rows",
+      "meaning": "The pair is in annotated unison or a stable parallel diatonic interval over the Hauptstimme span.",
+      "unit": "part pair within a rational score span",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "prominent_part",
+      "kind": "representation",
+      "representation_target": "structural_relationships",
+      "availability": "supported",
+      "source": "OpenScore human Hauptstimme annotations",
+      "meaning": "The canonical score part selected by the annotator as carrying the primary melodic line.",
+      "unit": "Hauptstimme segment and canonical part",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "material_recurrence",
+      "kind": "representation",
+      "representation_target": "material_identity",
+      "availability": "supported",
+      "source": "Adjacent OpenScore Hauptstimme labels and S3 theme labels",
+      "meaning": "Whether adjacent annotated segments use the same source-local material identity.",
+      "unit": "adjacent segment pair within one score",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "form_section",
+      "kind": "representation",
+      "representation_target": "phrase_and_section_context",
+      "availability": "supported",
+      "source": "S3 form-analysis section labels",
+      "meaning": "The human analytical section containing the annotated phrase.",
+      "unit": "annotated phrase span",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "cadence_type",
+      "kind": "representation",
+      "representation_target": "phrase_and_section_context",
+      "availability": "supported",
+      "source": "S3 cadence annotations",
+      "meaning": "The annotated authentic, half, plagal, or deceptive cadence category.",
+      "unit": "cadential score span",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "harmonic_function",
+      "kind": "representation",
+      "representation_target": "phrase_and_section_context",
+      "availability": "supported",
+      "source": "S3 harmony annotations",
+      "meaning": "Key-relative degree, chord quality, and inversion; key and Roman spelling remain metadata.",
+      "unit": "annotated harmonic span",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "orchestral_role",
+      "kind": "representation",
+      "representation_target": "structural_relationships",
+      "availability": "supported",
+      "source": "S3 orchestral-texture annotations",
+      "meaning": "The unordered melody, rhythmic-accompaniment, and harmonic-accompaniment role set for one canonical part or staff.",
+      "unit": "canonical part or staff within an annotated span",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "seam_boundary",
+      "kind": "representation",
+      "representation_target": "seam_context",
+      "availability": "supported",
+      "source": "OpenScore Hauptstimme changes and S3 phrase onsets, contrasted with other measure boundaries",
+      "meaning": "Whether a measure-grid location is an annotated material or phrase boundary rather than an unlabeled continuation.",
+      "unit": "measure boundary with left and right Partitura context",
+      "metric": "macro_f1",
+      "baselines": ["majority", "nearest_centroid"]
+    },
+    {
+      "id": "candidate_to_original_change",
+      "kind": "representation",
+      "representation_target": "candidate_to_original_change",
+      "availability": "unavailable",
+      "source": "Requires retained composition trajectory candidates",
+      "meaning": "The explicit graph-addressed change from an original score state to a candidate.",
+      "unit": "candidate/original pair",
+      "metric": null,
+      "baselines": [],
+      "reason": "The historical-score pilot contains no candidate patches or before/after score pairs."
+    },
+    {
+      "id": "critic_coherence",
+      "kind": "critic",
+      "availability": "unavailable",
+      "source": "Requires criterion-specific blind human comparisons",
+      "meaning": "Human preference evidence about musical coherence.",
+      "unit": "candidate/original or candidate/candidate comparison",
+      "metric": null,
+      "baselines": [],
+      "reason": "Historical annotations are analytical facts, not quality judgments."
+    },
+    {
+      "id": "critic_identity",
+      "kind": "critic",
+      "availability": "unavailable",
+      "source": "Requires criterion-specific blind human comparisons",
+      "meaning": "Human preference evidence about preservation or development of material identity.",
+      "unit": "candidate/original or candidate/candidate comparison",
+      "metric": null,
+      "baselines": [],
+      "reason": "Source-local theme labels do not judge edit quality."
+    },
+    {
+      "id": "critic_seams",
+      "kind": "critic",
+      "availability": "unavailable",
+      "source": "Requires criterion-specific blind human comparisons",
+      "meaning": "Human preference evidence about continuity across an edited seam.",
+      "unit": "candidate/original or candidate/candidate comparison",
+      "metric": null,
+      "baselines": [],
+      "reason": "Boundary locations are not seam-quality ratings."
+    },
+    {
+      "id": "critic_orchestration",
+      "kind": "critic",
+      "availability": "unavailable",
+      "source": "Requires criterion-specific blind human comparisons",
+      "meaning": "Human preference evidence about orchestration quality.",
+      "unit": "candidate/original or candidate/candidate comparison",
+      "metric": null,
+      "baselines": [],
+      "reason": "Instrument roles describe function but do not rate orchestration."
+    },
+    {
+      "id": "critic_reserve",
+      "kind": "critic",
+      "availability": "unavailable",
+      "source": "Requires criterion-specific blind human comparisons",
+      "meaning": "Human preference evidence about density, restraint, and preserved compositional reserve.",
+      "unit": "candidate/original or candidate/candidate comparison",
+      "metric": null,
+      "baselines": [],
+      "reason": "No source annotation expresses a reserve preference."
+    }
+  ],
+  "minimum_coverage": {
+    "score_count": 110,
+    "failed_score_count": 0,
+    "binding_failure_count": 0,
+    "failed_audit_count": 10,
+    "profile_score_counts": {
+      "openscore_hauptstimme_v1": 94,
+      "s3_v1": 16
+    },
+    "supported_targets_with_examples": 8,
+    "unavailable_target_count": 6
+  }
+}

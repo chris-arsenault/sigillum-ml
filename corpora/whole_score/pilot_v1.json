@@ -1,0 +1,254 @@
+{
+  "schema_version": 1,
+  "dataset_id": "whole_score_observation_pilot_v1",
+  "observation_schema_version": 1,
+  "data_root": "assets/raw/corpus/whole_score",
+  "output_root": "outputs/datasets/whole_score/pilot_v1",
+  "training_targets": {
+    "representation": [
+      "structural_relationships",
+      "material_identity",
+      "phrase_and_section_context",
+      "seam_context",
+      "candidate_to_original_change"
+    ],
+    "criterion_specific_critics": [
+      "coherence",
+      "identity",
+      "seams",
+      "orchestration",
+      "reserve"
+    ],
+    "ruby_authoritative_auxiliaries": [
+      "mechanical_validity",
+      "requirement_binding"
+    ],
+    "excluded_targets": [
+      "raw_note_prediction_as_the_only_objective",
+      "one_composite_quality_score",
+      "agent_or_deterministic_origin_as_positive_reward"
+    ]
+  },
+  "split_policy": {
+    "key": "composition_lineage",
+    "rule": "Every movement and alternate encoding of one work stays in one split. Held-out evaluation preferences are excluded from training independently of this score-corpus split."
+  },
+  "collections": [
+    {
+      "id": "openscore_orchestra_gold",
+      "source_id": "openscore_orchestra",
+      "source_version": {
+        "label": "v1.0.1",
+        "commit": "45edea23b6fcb9e64a8d56b0d86b9cdfb99614f7"
+      },
+      "root": "sources/openscore_orchestra/source/repository",
+      "score_glob": "data/**/*.mxl",
+      "exclude_globs": [
+        "data/**/*_melody.mxl"
+      ],
+      "expected_score_count": 94,
+      "annotation_rules": [
+        {
+          "kind": "hauptstimme_annotations",
+          "patterns": ["{directory}/{stem}_annotations.csv"]
+        },
+        {
+          "kind": "part_relations",
+          "patterns": ["{directory}/{stem}_part_relations.csv"]
+        },
+        {
+          "kind": "prominent_line_score",
+          "patterns": ["{directory}/{stem}_melody.mxl"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "bach_bwv232",
+          "split": "train",
+          "score_globs": ["data/Bach,_Johann_Sebastian/B_Minor_Mass,_BWV.232/**/*.mxl"]
+        },
+        {
+          "id": "bach_bwv1048",
+          "split": "train",
+          "score_globs": ["data/Bach,_Johann_Sebastian/Brandenburg_Concerto_No.3,_BWV.1048/**/*.mxl"]
+        },
+        {
+          "id": "bach_bwv1049",
+          "split": "train",
+          "score_globs": ["data/Bach,_Johann_Sebastian/Brandenburg_Concerto_No.4,_BWV.1049/**/*.mxl"]
+        },
+        {
+          "id": "beach_op32",
+          "split": "validation",
+          "score_globs": ["data/Beach,_Amy/Symphony_in_E_minor_(Gaelic),_Op.32/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op21",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.1,_Op.21/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op36",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.2,_Op.36/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op55",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.3,_Op.55/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op60",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.4,_Op.60/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op67",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.5,_Op.67/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op68",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.6,_Op.68/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op92",
+          "split": "train",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.7,_Op.92/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op93",
+          "split": "validation",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.8,_Op.93/**/*.mxl"]
+        },
+        {
+          "id": "beethoven_op125",
+          "split": "test",
+          "score_globs": ["data/Beethoven,_Ludwig_van/Symphony_No.9,_Op.125/**/*.mxl"]
+        },
+        {
+          "id": "boulanger_d_un_matin",
+          "split": "test",
+          "score_globs": ["data/Boulanger,_Lili/*.mxl"]
+        },
+        {
+          "id": "brahms_op45",
+          "split": "test",
+          "score_globs": ["data/Brahms,_Johannes/Ein_Deutsches_Requiem,_Op.45/**/*.mxl"]
+        },
+        {
+          "id": "brahms_op68",
+          "split": "train",
+          "score_globs": ["data/Brahms,_Johannes/Symphony_No.1,_Op.68/**/*.mxl"]
+        },
+        {
+          "id": "brahms_op73",
+          "split": "train",
+          "score_globs": ["data/Brahms,_Johannes/Symphony_No.2,_Op.73/**/*.mxl"]
+        },
+        {
+          "id": "brahms_op90",
+          "split": "train",
+          "score_globs": ["data/Brahms,_Johannes/Symphony_No.3,_Op.90/**/*.mxl"]
+        },
+        {
+          "id": "brahms_op98",
+          "split": "validation",
+          "score_globs": ["data/Brahms,_Johannes/Symphony_No.4,_Op.98/**/*.mxl"]
+        },
+        {
+          "id": "bruckner_wab105",
+          "split": "test",
+          "score_globs": ["data/Bruckner,_Anton/Symphony_No.5,_WAB.105/**/*.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "s3_annotated_symphonies",
+      "source_id": "s3_symbolic_symphonies",
+      "source_version": {
+        "commit": "f845a46314fc603259bbe9bdf773a7bb2d235295"
+      },
+      "root": "sources/s3_symbolic_symphonies/source/repository",
+      "score_glob": "symbolic_symphony_set/*/sheet.xml",
+      "exclude_globs": [],
+      "expected_score_count": 16,
+      "annotation_rules": [
+        {
+          "kind": "s3_form",
+          "patterns": ["{directory}/annotations/form/form_analysis.csv"]
+        },
+        {
+          "kind": "s3_cadence",
+          "patterns": ["{directory}/annotations/form/cadence.csv"]
+        },
+        {
+          "kind": "s3_harmony",
+          "patterns": ["{directory}/annotations/form/harmony.csv"]
+        },
+        {
+          "kind": "s3_note_events",
+          "patterns": ["{directory}/annotations/note/*.csv"]
+        },
+        {
+          "kind": "s3_orchestral_texture",
+          "patterns": ["{directory}/annotations/orchestral_texture/*.csv"]
+        },
+        {
+          "kind": "s3_note_played",
+          "patterns": ["{directory}/annotations/note_played/note_played.csv"]
+        },
+        {
+          "kind": "s3_downbeats",
+          "patterns": ["{directory}/annotations/temporal_attributes/downbeat.csv"]
+        },
+        {
+          "kind": "s3_time_signature",
+          "patterns": ["{directory}/annotations/temporal_attributes/time_signature.csv"]
+        },
+        {
+          "kind": "s3_measure_count",
+          "patterns": ["{directory}/annotations/temporal_attributes/measure_num.txt"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "s3_mozart_41",
+          "split": "train",
+          "score_globs": ["symbolic_symphony_set/mo*/sheet.xml"]
+        },
+        {
+          "id": "s3_tchaikovsky_6",
+          "split": "train",
+          "score_globs": ["symbolic_symphony_set/tc*/sheet.xml"]
+        },
+        {
+          "id": "s3_dvorak_9",
+          "split": "validation",
+          "score_globs": ["symbolic_symphony_set/dv*/sheet.xml"]
+        },
+        {
+          "id": "s3_beethoven_9",
+          "split": "test",
+          "score_globs": ["symbolic_symphony_set/be*/sheet.xml"]
+        }
+      ]
+    }
+  ],
+  "minimum_coverage": {
+    "score_count": 110,
+    "failed_score_count": 0,
+    "source_score_counts": {
+      "openscore_orchestra": 94,
+      "s3_symbolic_symphonies": 16
+    },
+    "split_score_counts": {
+      "train": 79,
+      "validation": 16,
+      "test": 15
+    },
+    "lineage_count": 24,
+    "scores_with_annotations": 110
+  }
+}
