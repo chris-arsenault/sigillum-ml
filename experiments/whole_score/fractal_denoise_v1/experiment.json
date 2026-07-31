@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_fractal_denoise_v1",
+  "pilot_manifest": "outputs/datasets/whole_score/pilot_v1/manifest.json",
+  "expected_pilot_manifest_digest": "sha256:c3f5434fc14126b77dbd83fe2dcd960d38db9e2ae76892934e7a57d3d3f2edb8",
+  "output_root": "outputs/experiments/whole_score/fractal_denoise_v1",
+  "hypothesis": "A single label-free continuous DDPM denoiser trained on the full 110-score corpus can start from noise and refine toward a plausible whole-score window, and can reconstruct masked measures of held-out scores better than silence / marginal-frequency / persistence baselines without collapsing to silence or a single repeated column. This is the whole-score, no-labels generalization of the fractal_harmony_v1 refinement probe.",
+  "representation": {
+    "grid": "meter_normalized_onset_roll",
+    "subdivisions_per_measure": 16,
+    "window_measures": 8,
+    "steps": 128,
+    "pitch_low_midi": 21,
+    "pitch_count": 88,
+    "families": ["flute", "oboe", "clarinet", "bassoon", "horn", "trumpet", "trombone", "tuba", "percussion", "violin", "viola", "low_strings"],
+    "channels": 1056,
+    "note": "Onset roll (first cell of each note only), kept sparse (~0.2% active). Time is meter-normalized so downbeats align across time signatures. Instrument family is a keyword classification of the Partitura part name; unclassified parts fall back to low_strings and are counted. The roll is built only from already-projected Partitura observation facts; MusicXML/MIDI/audio materialization stays in Ruby Partitura."
+  },
+  "model": {
+    "type": "continuous_ddpm",
+    "objective": "epsilon_prediction",
+    "backbone": "dilated_conv1d_film_resblocks",
+    "width": 192,
+    "depth": 8,
+    "diffusion_steps": 200,
+    "noise_schedule": "cosine_to_near_pure_noise",
+    "sparse_active_auxiliary": {"active_weight": 32.0, "x0_weight": 0.1},
+    "sampling": "ancestral_ddpm_with_optional_repaint_anchor"
+  },
+  "training": {
+    "epochs": 40,
+    "batch_size": 16,
+    "learning_rate": 0.0002,
+    "min_active_onsets_per_window": 8,
+    "split_source": "manifest lineage split (train 79 / validation 16 / test 15 scores)"
+  },
+  "task": {
+    "name": "masked_measure_reconstruction",
+    "mask_measures": 2,
+    "mask_shape": "contiguous centered block across all channels",
+    "conditioning": "RePaint anchor re-imposes the unmasked context every reverse step"
+  },
+  "baselines": ["silence", "marginal_frequency", "persistence_time_copy"],
+  "metrics": [
+    "masked_region_active_cell_precision_recall_f1",
+    "held_out_lineage_generalization_validation_and_test",
+    "unconditional_density_vs_authentic",
+    "unconditional_repetition_rate_vs_authentic"
+  ],
+  "honesty": [
+    "The roll is ~99.8% empty, so accuracy is meaningless; the reported signal is active-cell F1 on masked cells only.",
+    "Persistence (time-copy) is the mandatory strong baseline: orchestral music repeats locally, and a denoiser that only memorizes repetition should not be credited.",
+    "A learned advantage on validation must also hold on the unseen-lineage test split to count as generalization.",
+    "Unconditional samples must land in the authentic density and repetition band; collapse to silence or to one repeated column is a failure even if masked-F1 looks good.",
+    "This is a generation primitive only: it is not a critic, a selection policy, an RL reward, or a materialized audition. Materialization and human review remain downstream, deferred work."
+  ]
+}
