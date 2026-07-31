@@ -511,6 +511,14 @@ identity or patch. A separate private JSONL record retains the blind mapping.
 it either `training` or `held_out_evaluation`. Reusing one review in both
 purposes is rejected.
 
+Trajectory review/preference schema v2 also records one explicit judgment
+criterion—coherence, identity, seams, orchestration, or reserve—independently
+from the local/seam/section/global/export review scale. Critic training rejects
+held-out run or candidate-comparison overlap, derives validation membership
+from a frozen run-level hash, and requires both blind outcomes at useful
+coverage. Historical analysis labels and trajectory acceptance decisions are
+not promoted into preference labels.
+
 ## 10. Operationalization status
 
 As of 2026-07-27, the corrected operational boundary is implemented:
@@ -545,6 +553,14 @@ As of 2026-07-27, the corrected operational boundary is implemented:
   three baseline strategies and ten named ablations, rejects duplicate run
   cells, reports incomplete coverage honestly, and keeps human evaluation
   outside reward optimization.
+- a shared learned score-span encoder and eight analytical heads have been
+  trained with content-addressed artifacts; the first result was weaker than
+  nearest centroid, and its label-balanced successor is intentionally
+  validation-only after the original test was exposed;
+- the five-head pairwise critic implementation, corpus audit, run-level leakage
+  checks, balanced orientation training, and artifact verification are
+  operational, but the real corpus is still zero and training is prohibited
+  until blind human preferences are collected and pinned.
 
 The historical raw-MIDI dataset and categorization tools still name the removed
 Python analysis API. They are not part of the active whole-score path and need a
@@ -558,3 +574,56 @@ resumable model-service integration remain future operationalization phases.
 The versioned evidence and preference-capture path is implemented; generated
 corpora and review artifacts remain external experiment state rather than
 repository content.
+
+## 11. Fractalized refinement generator (first generation experiment)
+
+The critic/evaluation strand above measures whether a proposed continuation is
+plausible. The composition goal, however, is a **learned, successively refined
+complete score**: a coarse skeleton engraved into progressively finer detail by a
+shared operator. Section 6's kernel says the same thing abstractly ("select a
+scope, lens, and *refinement operator*"); `fractal_harmony_v1` is the first
+concrete generation test of that idea.
+
+**Framing.** A score attribute is laid on a maskable multi-resolution grid. A
+coarse representation reveals only a strided subset of slots; a finer
+representation reveals a denser subset. One shared learned operator fills the
+newly revealed slots at each step conditioned on the coarser context, and
+applying it recursively (`16→8→4→2→1`) is the fractalization. Crucially the
+*schedule* only says "make the grid twice as dense" — it does **not** encode a
+deterministic `form → harmony → melody → orchestration` plan. The grid/mask
+semantics are explicit and hand-specified; *what content* fills a refined slot,
+and whether it is good, is learned. This keeps the process a learnable refinement
+framework rather than an authored pipeline, which is the property we want for a
+fractalized generation model.
+
+**First instantiation: harmony.** The first ladder level is functional harmony,
+because Ruby Partitura already projects per-measure `harmonic_function`
+annotations, so Python manufactures a dataset over existing facts instead of
+parsing scores. Chords are key-relative Roman functions (`I`, `V`, `V/V`); an
+absolute-key encoding fragmented the vocabulary and failed to transfer. The
+operator is a small conditional Transformer reused at every stride; parent
+pillars are held exactly fixed during recursive generation.
+
+**Measured outcome (see `experiments/whole_score/fractal_harmony_v1/report.md`).**
+Mixed, and reported honestly:
+
+- *Positive, narrow.* On seen composers (unseen movement), the shared operator
+  beats copy/unigram/bigram baselines at the two coarsest refinement steps
+  (`16→8`, `8→4`) — where it must invent genuine harmonic motion — replicated
+  across three seeds. This is the first evidence the shared primitive carries
+  useful information.
+- *Negative.* Copy wins at fine strides (adjacent bars usually repeat their
+  chord); full recursive argmax generation degenerates toward repeated chords
+  (repeat rate ≈0.9 vs authentic ≈0.45); held-out likelihood still loses to a
+  smoothed bigram LM; and cross-composer transfer is not demonstrated with only
+  four annotated lineages.
+
+**What this does and does not establish.** It establishes that a single shared
+coarse-to-fine operator is a viable generation primitive at coarse resolution and
+is worth developing (richer harmonic rhythm than one-chord-per-bar, more
+annotated lineages, a decoding objective that penalizes degenerate repetition,
+and additional ladder levels beyond harmony). It does **not** establish a
+full-score composer, and no controller, best-of-K selector, or RL reward is
+justified on top of it yet. The immediate blocker to a model that "produces
+results" is generative quality of this primitive (repetition collapse, likelihood
+below a bigram) and annotated-corpus breadth — not more scaffolding.

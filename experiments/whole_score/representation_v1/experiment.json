@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_span_encoder_pilot_v1",
+  "annotation_manifest": "outputs/datasets/whole_score/annotation_semantics_v1/manifest.json",
+  "expected_annotation_manifest_digest": "sha256:95e8b714b82e73590a0a70e71aa459765bec93c760b935933145ef8dfacc4952",
+  "baseline_report": "outputs/datasets/whole_score/annotation_semantics_v1/baselines.json",
+  "expected_baseline_report_digest": "sha256:d717b11ea9196e49ef6678818da2a307b7c505f37e526d8c718c1592ec968f58",
+  "output_root": "outputs/experiments/whole_score/representation_v1",
+  "targets": [
+    "structural_part_relation",
+    "prominent_part",
+    "material_recurrence",
+    "form_section",
+    "cadence_type",
+    "harmonic_function",
+    "orchestral_role",
+    "seam_boundary"
+  ],
+  "seed": 20260727,
+  "model": {
+    "embedding_dim": 32,
+    "representation_dim": 32,
+    "dropout": 0.1
+  },
+  "training": {
+    "steps": 300,
+    "batch_size_per_target": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "validation_interval": 50,
+    "patience": 6,
+    "gradient_clip": 1.0,
+    "evaluation_batch_size": 512
+  },
+  "selection_metric": "mean_target_macro_f1"
+}

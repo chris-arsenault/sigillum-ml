@@ -1,0 +1,33 @@
+      phrase :theme_return, surface: :split_pitch_rhythm,
+              material: :theme, relation: :return do
+        pitches <<~PITCHES
+          Ab4{f} Bb4 C5 Eb5 F5 Eb5 C5 |
+          Db5 C5 Bb4 Ab4 G4 Ab4 C5 |
+          Eb5 F5 G5 F5 Eb5 Db5 C5 |
+          Bb4 C5 Db5 Eb5 C5 Ab4
+        PITCHES
+        rhythm <<~RHYTHM
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          3/4 1/4 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1 1/2 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :theme_return, id: :theme_return_flute,
+                part: :flute, role: :foreground, at: "bar 5 beat 1"
+      phrase :return_counterline, surface: :split_pitch_rhythm do
+        pitches <<~PITCHES
+          Eb3 C4{mf} Db4 Eb4 F4 Eb4 |
+          C4 Db4 C4 Bb3 Ab3 G3 Ab3 |
+          C4 Eb4 F4 G4 F4 Eb4 Db4 |
+          C4 Bb3 C4 Db4 Eb4 Ab3
+        PITCHES
+        rhythm <<~RHYTHM
+          1/2 1 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :return_counterline, id: :return_counterline_clarinet,
+                part: :clarinet, role: :counterline, at: "bar 5 beat 1"

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_pairwise_critics_v1",
+  "corpus_index": "outputs/datasets/whole_score/critic_v1/index.json",
+  "expected_corpus_index_digest": null,
+  "output_root": "outputs/experiments/whole_score/critic_v1",
+  "criteria": [
+    {
+      "id": "coherence",
+      "scales": ["local", "section", "global", "export"],
+      "minimum_pairs": {
+        "train": 200,
+        "validation": 40,
+        "held_out_evaluation": 80
+      },
+      "minimum_runs": {
+        "train": 8,
+        "validation": 2,
+        "held_out_evaluation": 4
+      }
+    },
+    {
+      "id": "identity",
+      "scales": ["local", "section", "global", "export"],
+      "minimum_pairs": {
+        "train": 200,
+        "validation": 40,
+        "held_out_evaluation": 80
+      },
+      "minimum_runs": {
+        "train": 8,
+        "validation": 2,
+        "held_out_evaluation": 4
+      }
+    },
+    {
+      "id": "seams",
+      "scales": ["seam"],
+      "minimum_pairs": {
+        "train": 200,
+        "validation": 40,
+        "held_out_evaluation": 80
+      },
+      "minimum_runs": {
+        "train": 8,
+        "validation": 2,
+        "held_out_evaluation": 4
+      }
+    },
+    {
+      "id": "orchestration",
+      "scales": ["local", "section", "global", "export"],
+      "minimum_pairs": {
+        "train": 200,
+        "validation": 40,
+        "held_out_evaluation": 80
+      },
+      "minimum_runs": {
+        "train": 8,
+        "validation": 2,
+        "held_out_evaluation": 4
+      }
+    },
+    {
+      "id": "reserve",
+      "scales": ["section", "global", "export"],
+      "minimum_pairs": {
+        "train": 200,
+        "validation": 40,
+        "held_out_evaluation": 80
+      },
+      "minimum_runs": {
+        "train": 8,
+        "validation": 2,
+        "held_out_evaluation": 4
+      }
+    }
+  ],
+  "validation": {
+    "salt": "sigillum-whole-score-critic-v1-validation",
+    "modulus": 5,
+    "buckets": [0]
+  },
+  "seed": 20260727,
+  "model": {
+    "representation_dim": 64,
+    "dropout": 0.1
+  },
+  "training": {
+    "steps": 1000,
+    "batch_size_per_criterion": 32,
+    "learning_rate": 0.001,
+    "weight_decay": 0.0001,
+    "validation_interval": 50,
+    "patience": 8,
+    "gradient_clip": 1.0,
+    "evaluation_batch_size": 512
+  },
+  "selection_metric": "mean_criterion_balanced_accuracy"
+}

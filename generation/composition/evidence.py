@@ -16,13 +16,14 @@ from types import MappingProxyType
 from typing import Any, Mapping
 
 TRAJECTORY_SCHEMA_VERSION = 2
-REVIEW_SCHEMA_VERSION = 1
-PREFERENCE_SCHEMA_VERSION = 1
+REVIEW_SCHEMA_VERSION = 2
+PREFERENCE_SCHEMA_VERSION = 2
 ORIGINAL_CANDIDATE_ID = "original"
 
 _DIGEST = re.compile(r"sha256:[0-9a-f]{64}\Z")
 _ORIGINS = {"deterministic": "unrated", "agent": "medium"}
 _REVIEW_SCALES = {"local", "seam", "section", "global", "export"}
+_REVIEW_CRITERIA = {"coherence", "identity", "seams", "orchestration", "reserve"}
 _OUTCOMES = {"a", "b", "tie", "abstain"}
 _PURPOSES = {"training", "held_out_evaluation"}
 
@@ -200,6 +201,7 @@ class PairwiseReviewRecord:
     review_id: str
     transition_id: str
     scale: str
+    criterion: str
     variants: Mapping[str, str]
     raw: Mapping[str, Any]
 
@@ -212,6 +214,9 @@ class PairwiseReviewRecord:
         scale = _text(value.get("scale"), "review scale")
         if scale not in _REVIEW_SCALES:
             raise EvidenceError(f"unsupported review scale {scale!r}")
+        criterion = _text(value.get("criterion"), "review criterion")
+        if criterion not in _REVIEW_CRITERIA:
+            raise EvidenceError(f"unsupported review criterion {criterion!r}")
         variants = {}
         for item in _sequence(value.get("variants"), "review variants"):
             variant = _mapping(item, "review variant")
@@ -224,6 +229,7 @@ class PairwiseReviewRecord:
             review_id=_text(value.get("review_id"), "review_id"),
             transition_id=_text(value.get("transition_id"), "transition_id"),
             scale=scale,
+            criterion=criterion,
             variants=_freeze(variants),
             raw=_freeze(value),
         )
@@ -238,6 +244,7 @@ class HumanPreferenceRecord:
     preferred_candidate_id: str | None
     other_candidate_id: str | None
     scale: str
+    criterion: str
     purpose: str
     raw: Mapping[str, Any]
 
@@ -250,12 +257,15 @@ class HumanPreferenceRecord:
         outcome = _text(value.get("outcome"), "preference outcome")
         purpose = _text(value.get("purpose"), "preference purpose")
         scale = _text(value.get("scale"), "preference scale")
+        criterion = _text(value.get("criterion"), "preference criterion")
         if outcome not in _OUTCOMES:
             raise EvidenceError(f"unsupported preference outcome {outcome!r}")
         if purpose not in _PURPOSES:
             raise EvidenceError(f"unsupported preference purpose {purpose!r}")
         if scale not in _REVIEW_SCALES:
             raise EvidenceError(f"unsupported preference scale {scale!r}")
+        if criterion not in _REVIEW_CRITERIA:
+            raise EvidenceError(f"unsupported preference criterion {criterion!r}")
         preferred = value.get("preferred_candidate_id")
         other = value.get("other_candidate_id")
         if outcome in {"a", "b"}:
@@ -273,6 +283,7 @@ class HumanPreferenceRecord:
             preferred_candidate_id=preferred,
             other_candidate_id=other,
             scale=scale,
+            criterion=criterion,
             purpose=purpose,
             raw=_freeze(value),
         )
@@ -388,6 +399,7 @@ class CompositionDataset:
         if (
             preference.transition_id != review.transition_id
             or preference.scale != review.scale
+            or preference.criterion != review.criterion
         ):
             raise EvidenceError(
                 f"preference {preference.preference_id} disagrees with its review"

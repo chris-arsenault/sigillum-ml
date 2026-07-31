@@ -78,6 +78,20 @@ training views, and runs majority and nearest-centroid baselines. The measured
 110-score result and its known source-alignment limitations are recorded in
 `annotation_semantics_v1_report.md`.
 
+## Structural-context external holdout
+
+`structural_context_external_holdout_v1.json` freezes seven PDMX scores across
+six Mahler, Schubert, Haydn, and Mendelssohn lineages for one-time evaluation of
+the preselected structural-context v4 checkpoint. It is excluded from training.
+Build and verify it with:
+
+```bash
+python -m generation.tools.build_score_observations \
+  --spec corpora/whole_score/structural_context_external_holdout_v1.json build
+python -m generation.tools.build_score_observations \
+  --spec corpora/whole_score/structural_context_external_holdout_v1.json verify
+```
+
 ## Retrieval status: 2026-07-27
 
 All 15 registered fetchable sources downloaded, verified, and extracted. This

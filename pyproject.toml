@@ -8,6 +8,7 @@ dependencies = [
     "music21>=9",
     "numpy>=1.26",
     "pretty_midi>=0.2.10",
+    "scipy>=1.11",
     "torch>=2",
 ]
 

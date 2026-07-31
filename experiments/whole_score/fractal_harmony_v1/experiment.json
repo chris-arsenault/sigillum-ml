@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_fractal_harmony_v1",
+  "annotation_manifest": "outputs/datasets/whole_score/annotation_semantics_v1/manifest.json",
+  "expected_annotation_manifest_digest": "sha256:95e8b714b82e73590a0a70e71aa459765bec93c760b935933145ef8dfacc4952",
+  "pilot_manifest": "outputs/datasets/whole_score/pilot_v1/manifest.json",
+  "expected_pilot_manifest_digest": "sha256:c3f5434fc14126b77dbd83fe2dcd960d38db9e2ae76892934e7a57d3d3f2edb8",
+  "output_root": "outputs/experiments/whole_score/fractal_harmony_v1",
+  "hypothesis": "One shared learned refinement operator can invert a coarse functional-harmony skeleton (chords on a strided pillar grid) into a finer per-bar progression, held fixed at the pillars, better than copy/n-gram baselines at the coarse refinement steps where genuine harmonic motion must be produced.",
+  "representation": {
+    "level": "functional_harmony",
+    "grid": "per_bar_downbeat",
+    "token": "key_relative_roman_functional",
+    "note": "Inversions and figured-bass digits are collapsed (V7->V, ii65->ii); they belong to a finer ladder level. Tokens are key-relative so held-out composers share the vocabulary."
+  },
+  "ladder": {
+    "coarsest_stride": 16,
+    "schedule": [16, 8, 4, 2, 1],
+    "operator": "shared_conditional_transformer",
+    "recursive": true
+  },
+  "task": {
+    "window_measures": 48,
+    "window_stride": 8,
+    "max_tokens": 80
+  },
+  "model": {
+    "d_model": 160,
+    "layers": 3,
+    "heads": 4,
+    "ff": 384,
+    "dropout": 0.1
+  },
+  "training": {
+    "epochs": 55,
+    "batch_size": 64,
+    "learning_rate": 0.0004,
+    "weight_decay": 0.01
+  },
+  "splits": {
+    "composer_holdout": "frozen dataset splits: train Mozart 41 + Tchaikovsky 6, validate Dvorak 9, test Beethoven 9 (cross-composer)",
+    "movement_holdout": "every composer appears in train; one movement per composer held out for validation and test (seen-composer, unseen-movement)"
+  },
+  "baselines": ["copy_nearest_pillar", "unigram", "bigram", "bigram_lm"],
+  "metrics": [
+    "per_step_exact_match_accuracy",
+    "recursive_full_refinement_accuracy",
+    "parent_pillar_preservation",
+    "held_out_negative_log_likelihood_vs_bigram_lm",
+    "harmonic_motion_realism_repeat_rate_and_bigram_js"
+  ],
+  "honesty": [
+    "Exact-match at fine strides is dominated by harmonic persistence; copy_nearest_pillar is the mandatory strong baseline.",
+    "This tests one harmonic ladder level only; it is not a full-score composer, a critic, a selection policy, or an RL reward.",
+    "Only four composers carry harmonic-function annotations, so cross-composer generalization is measured but expected to be data-limited."
+  ]
+}

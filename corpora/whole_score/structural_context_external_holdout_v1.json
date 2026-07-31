@@ -1,0 +1,197 @@
+{
+  "schema_version": 1,
+  "dataset_id": "structural_context_external_holdout_v1",
+  "observation_schema_version": 1,
+  "data_root": "assets/raw/corpus/whole_score",
+  "output_root": "outputs/datasets/whole_score/structural_context_external_holdout_v1",
+  "training_targets": {
+    "purpose": "one-time external evaluation of structural-context v4",
+    "excluded_from_training": true
+  },
+  "split_policy": {
+    "key": "composition_lineage",
+    "rule": "All selected scores are external test material. Movements of the same work share one lineage."
+  },
+  "collections": [
+    {
+      "id": "pdmx_mahler_kindertotenlieder_1",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/9/47/QmRU6b3hP7B7Hz7RUswhn8ggQAHuK7ZZp9tuJ3Cmrn4J5k.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/3/141049.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "mahler_kindertotenlieder",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/9/47/QmRU6b3hP7B7Hz7RUswhn8ggQAHuK7ZZp9tuJ3Cmrn4J5k.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_schubert_8_1",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/11/38/QmTq3bKr49pDFmUytpNXrhZYMzRvEFhpKbAtpRSdLkj24m.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/5/5126660.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "schubert_symphony_8",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/11/38/QmTq3bKr49pDFmUytpNXrhZYMzRvEFhpKbAtpRSdLkj24m.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_schubert_8_2",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/10/25/QmSiEEHGiYkW1pr3YbyApmUxicWDHJ7FLS5TcNZET1GMqb.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/5/5461572.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "schubert_symphony_8",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/10/25/QmSiEEHGiYkW1pr3YbyApmUxicWDHJ7FLS5TcNZET1GMqb.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_haydn_2",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/1/4/Qmb5CrJauHWQQQknGx2TbaKsMf67M2HrdhwKqB2Jyba7Rz.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/7/5435811.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "haydn_symphony_2",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/1/4/Qmb5CrJauHWQQQknGx2TbaKsMf67M2HrdhwKqB2Jyba7Rz.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_haydn_6",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/4/31/Qmem36X4CEuXvbA9M7mS7JDKRSMHuJCWLkCoHK3d8T5xUg.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/4/5452080.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "haydn_symphony_6",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/4/31/Qmem36X4CEuXvbA9M7mS7JDKRSMHuJCWLkCoHK3d8T5xUg.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_haydn_8",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/13/14/QmVCxCS4cq3TrCWNWAfywuzsfR8YUb2HbrAVcHmYic5M5m.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/7/5648405.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "haydn_symphony_8",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/13/14/QmVCxCS4cq3TrCWNWAfywuzsfR8YUb2HbrAVcHmYic5M5m.mxl"]
+        }
+      ]
+    },
+    {
+      "id": "pdmx_mendelssohn_hebrides",
+      "source_id": "pdmx",
+      "source_version": {
+        "doi": "10.5281/zenodo.14648209"
+      },
+      "root": "sources/pdmx/source",
+      "score_glob": "musicxml/mxl/7/51/QmPWYrisdkKb5vNv7XidJkWXXEYmxUro9L97orodRxFd4Y.mxl",
+      "exclude_globs": [],
+      "expected_score_count": 1,
+      "annotation_rules": [
+        {
+          "kind": "pdmx_metadata",
+          "patterns": ["metadata/metadata/1/5937390.json"]
+        }
+      ],
+      "lineages": [
+        {
+          "id": "mendelssohn_hebrides",
+          "split": "test",
+          "score_globs": ["musicxml/mxl/7/51/QmPWYrisdkKb5vNv7XidJkWXXEYmxUro9L97orodRxFd4Y.mxl"]
+        }
+      ]
+    }
+  ],
+  "minimum_coverage": {
+    "score_count": 7,
+    "failed_score_count": 0,
+    "source_score_counts": {
+      "pdmx": 7
+    },
+    "split_score_counts": {
+      "test": 7
+    },
+    "lineage_count": 6,
+    "scores_with_annotations": 7
+  }
+}

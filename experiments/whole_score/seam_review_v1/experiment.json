@@ -1,0 +1,23 @@
+{
+  "schema_version": 1,
+  "experiment_id": "structural_seam_human_review_v1",
+  "structural_context_spec": "experiments/whole_score/structural_context_v4/experiment.json",
+  "expected_structural_context_spec_digest": "sha256:234fcf9ef62c57b77da6692b7d3ddd7e63ff080a787976e3b63b7213a0bb2020",
+  "checkpoint": "outputs/experiments/whole_score/structural_context_v4/checkpoint.pt",
+  "expected_checkpoint_digest": "sha256:f4d088c8fe07d09d0bc580f70fce87de03d097f39fc026602cc6f0a60dbd2571",
+  "holdout_manifest": "outputs/datasets/whole_score/structural_context_external_holdout_v1/manifest.json",
+  "expected_holdout_manifest_digest": "sha256:6d482187734486b18d61ec6660918754498b0313e54e64cd553e78ad66fcc9e4",
+  "output_root": "outputs/reviews/whole_score/seam_review_v1",
+  "item_count": 6,
+  "selection": {
+    "one_item_per_lineage": true,
+    "prefer_model_correct_boundary_baseline_wrong": true,
+    "seed": "sigillum-structural-seam-review-v1"
+  },
+  "audio": {
+    "quarter_notes_per_minute": 104,
+    "sample_rate": 22050,
+    "lead_seconds": 0.3,
+    "tail_seconds": 0.8
+  }
+}

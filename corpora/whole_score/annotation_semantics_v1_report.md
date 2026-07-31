@@ -128,15 +128,22 @@ canonical digests, validated exact annotation-source identities, and loaded all
 230,284 examples. The ignored generated annotation dataset occupies
 approximately 128 MiB in this build.
 
-## Operational next step
+## Learned follow-up
 
-The next representation slice can train a shared score-span encoder with
-target-specific heads against these eight labels, selecting architecture and
-regularization on validation macro-F1 while leaving the test split untouched.
-It should compare learned embeddings against the baselines here and retain
-per-target results rather than collapsing them into one quality score.
+The first shared score-span encoder was trained against these eight labels and
+is recorded in
+`../../experiments/whole_score/representation_v1/report.md`. It proves the
+split-safe learned-model and checkpoint machinery but does not beat nearest
+centroid overall; class imbalance produces majority-like heads on several
+targets.
 
-That encoder is not yet a critic. In parallel, the composition workflow must
-begin retaining original/candidate score pairs and blind criterion-specific
-human preferences. Only that evidence can make candidate-change and learned
-critic targets available.
+The label-balanced, validation-only successor is recorded in
+`../../experiments/whole_score/representation_v2/report.md`. Its mean validation
+macro-F1 rises from `0.16901250` to `0.18149075`, but remains below nearest
+centroid at `0.20774838`; the exposed test split was not evaluated again.
+
+Neither encoder is a critic. Trajectory review/preference schema v2 can now
+retain one explicit criterion for every original/candidate judgment, and the
+critic corpus audit enforces run-level held-out separation. The real readiness
+audit remains at zero preferences, so no analytical label or agent decision is
+being relabeled as reward.

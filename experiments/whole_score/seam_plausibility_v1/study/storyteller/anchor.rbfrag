@@ -1,0 +1,49 @@
+      phrase :theme_statement, surface: :split_pitch_rhythm,
+              material: :theme, relation: :statement do
+        pitches <<~PITCHES
+          C5 Bb4 A4 F#4 F4 F#4 F4 |
+          F4 F#4 A4 F#4 F4 Eb4 F4 r |
+          C5 Bb4 A4 F#4 F4 F#4 F4 |
+          F4 F#4 A4 Bb4 r C5 C#5 Eb5
+        PITCHES
+        rhythm <<~RHYTHM
+          3/2 1/4 1/4 1/4 1/4 1/2 1/2 |
+          1 1/4 1/4 1/2 1/2 1/4 1/4 1/2 |
+          3/2 1/4 1/4 1/4 1/4 1/2 1/2 |
+          1 1/4 1/4 1/2 1/4 1/2 1/2 1/4
+        RHYTHM
+      end
+      placement :theme_statement, id: :theme_statement_flute,
+                part: :flute, role: :foreground, at: "bar 1 beat 1"
+      phrase :statement_counterline, surface: :split_pitch_rhythm do
+        pitches <<~PITCHES
+          r F3{p} r |
+          r A3{p} Bb3 |
+          r |
+          r C4{mp} r
+        PITCHES
+        rhythm <<~RHYTHM
+          5/2 1/2 1/2 |
+          3 1/4 1/4 |
+          7/2 |
+          2 1/4 5/4
+        RHYTHM
+      end
+      placement :statement_counterline, id: :statement_counterline_clarinet,
+                part: :clarinet, role: :counterline, at: "bar 1 beat 1"
+      phrase :statement_color, surface: :absolute do
+        pitches <<~PITCHES
+          [F3,C4]{mp,txt:l.v.} r [F4,A4]{txt:l.v.} r |
+          [F3,C4]{mp,txt:l.v.} r [F#4,A4]{txt:l.v.} r |
+          [F3,C4]{mp,txt:l.v.} r [C#4,A4]{txt:l.v.} r |
+          [C3,G3]{mp,txt:l.v.} r [Bb3,F4]{txt:l.v.} r
+        PITCHES
+        rhythm <<~RHYTHM
+          1/2 1 1/2 3/2 |
+          1/2 3/2 1/2 1 |
+          1/2 1 1/2 3/2 |
+          1/2 1 1/2 3/2
+        RHYTHM
+      end
+      placement :statement_color, id: :statement_color_harp,
+                part: :harp, role: :color_anchor, at: "bar 1 beat 1"

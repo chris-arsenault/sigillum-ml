@@ -1,0 +1,16 @@
+      phrase :return_color, surface: :absolute do
+        pitches <<~PITCHES
+          [Ab2,Eb3]{f,txt:l.v.} r [Eb3,Bb3]{txt:l.v.} [Ab3,C4]{txt:l.v.} [C4,Eb4]{txt:l.v.} r [Eb4,G4]{txt:l.v.} |
+          [Db3,Ab3]{txt:l.v.} r [C3,G3]{txt:l.v.} [Bb3,Db4]{txt:l.v.} [Ab3,C4]{txt:l.v.} r [C4,Eb4]{txt:l.v.} |
+          [Eb3,Bb3]{txt:l.v.} [F3,C4]{txt:l.v.} [G3,Db4]{txt:l.v.} r [F3,C4]{txt:l.v.} [Eb3,Bb3]{txt:l.v.} [Db3,Ab3]{txt:l.v.} |
+          [C3,G3]{txt:l.v.} r [Bb3,Db4]{txt:l.v.} [Ab3,C4]{txt:l.v.} [G3,Bb3]{txt:l.v.} [Eb3,Bb3]{txt:l.v.} [Ab2,Eb3]{txt:l.v.}
+        PITCHES
+        rhythm <<~RHYTHM
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :return_color, id: :return_color_harp,
+                part: :harp, role: :color_anchor, at: "bar 5 beat 1"

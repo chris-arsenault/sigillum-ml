@@ -1,0 +1,49 @@
+      phrase :theme_statement, surface: :split_pitch_rhythm,
+              material: :theme, relation: :statement do
+        pitches <<~PITCHES
+          Ab4{mf,accent} C5 Eb5 Db5 C5 Bb4 |
+          C5 Db5 Eb5 F5 Eb5 C5 Ab4 |
+          G4 Ab4 Bb4 C5 Eb5 Db5 |
+          C5 Bb4 Ab4 G4 F4 Eb4
+        PITCHES
+        rhythm <<~RHYTHM
+          1 1/2 1/2 1/2 1/2 1/2 |
+          3/4 1/4 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1 1/2 |
+          1 1/2 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :theme_statement, id: :theme_statement_flute,
+                part: :flute, role: :foreground, at: "bar 1 beat 1"
+      phrase :statement_counterline, surface: :split_pitch_rhythm do
+        pitches <<~PITCHES
+          r C4{mf} Eb4 Db4 C4 |
+          Bb3 C4 Db4 Eb4 F4 Eb4 C4 |
+          Ab3 Eb4 F4 Eb4 Db4 C4 |
+          Bb3 Ab3 Bb3 C4 Bb3 Ab3 G3
+        PITCHES
+        rhythm <<~RHYTHM
+          3/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1 1/2 1/2 1/2 1/2 |
+          1/2 3/4 1/4 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :statement_counterline, id: :statement_counterline_clarinet,
+                part: :clarinet, role: :counterline, at: "bar 1 beat 1"
+      phrase :statement_color, surface: :absolute do
+        pitches <<~PITCHES
+          [Ab2,Eb3]{f,txt:l.v.} r [Eb3,Bb3]{txt:l.v.} [C4,Eb4]{txt:l.v.} r [Db4,F4]{txt:l.v.} r |
+          [Ab3,C4]{txt:l.v.} r [C4,Eb4]{txt:l.v.} [Db4,F4]{txt:l.v.} r [Eb4,G4]{txt:l.v.} r |
+          [Eb3,Bb3]{txt:l.v.} r [Ab3,C4]{txt:l.v.} [C4,Eb4]{txt:l.v.} r [Db4,F4]{txt:l.v.} r |
+          [Db3,Ab3]{txt:l.v.} [C3,G3]{txt:l.v.} r [Bb3,Db4]{txt:l.v.} [Ab3,C4]{txt:l.v.} r [Eb3,Bb3]{txt:l.v.}
+        PITCHES
+        rhythm <<~RHYTHM
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2 |
+          1/2 1/2 1/2 1/2 1/2 1/2 1/2
+        RHYTHM
+      end
+      placement :statement_color, id: :statement_color_harp,
+                part: :harp, role: :color_anchor, at: "bar 1 beat 1"

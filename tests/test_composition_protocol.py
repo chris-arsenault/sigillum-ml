@@ -17,6 +17,7 @@ from generation.composition import (
     ProposalRequest,
     ProposalResponse,
     ProtocolError,
+    ScoreObservation,
     SelectionRequest,
     SelectionResponse,
 )
@@ -169,7 +170,6 @@ class CompositionProtocolTests(unittest.TestCase):
                 str(trajectory),
                 "--proposals",
                 str(proposals),
-                "--no-export",
             )
             self.assertEqual(evaluated.returncode, 0, evaluated.stderr)
             selection_request = SelectionRequest.from_json(evaluated.stdout)
@@ -182,6 +182,18 @@ class CompositionProtocolTests(unittest.TestCase):
             self.assertTrue(mechanical["passed"])
             self.assertNotIn(
                 "source_patch", selection_request.assessments[0]["candidate"]
+            )
+            self.assertEqual(
+                (candidate.candidate_id,),
+                tuple(selection_request.candidate_observations),
+            )
+            candidate_observation = ScoreObservation.from_dict(
+                selection_request.to_dict()["candidate_observations"][
+                    candidate.candidate_id
+                ]
+            )
+            self.assertGreater(
+                candidate_observation.summary["measure_count"], 0
             )
 
             learned = LearnedCriticResult(
@@ -211,7 +223,6 @@ class CompositionProtocolTests(unittest.TestCase):
                 str(proposals),
                 "--selection",
                 str(selection),
-                "--no-export",
             )
             self.assertEqual(stepped.returncode, 0, stepped.stderr)
             result = json.loads(stepped.stdout)
@@ -221,6 +232,10 @@ class CompositionProtocolTests(unittest.TestCase):
                 source.read_text(encoding="utf-8"),
             )
             transition = json.loads(trajectory.read_text(encoding="utf-8"))
+            self.assertNotIn("candidate_observations", transition)
+            self.assertNotIn(
+                "candidate_observation", transition["candidates"][0]
+            )
             self.assertEqual(transition["selection"]["producer"], "test-learned-policy")
             self.assertEqual(
                 transition["candidates"][0]["critic_results"][1]["critic"],
@@ -345,6 +360,8 @@ class CompositionProtocolTests(unittest.TestCase):
             ORIGINAL_CANDIDATE_ID,
             "--scale",
             "global",
+            "--criterion",
+            "coherence",
             "--seed",
             seed,
         )
@@ -354,6 +371,7 @@ class CompositionProtocolTests(unittest.TestCase):
             (Path(payload["bundle"]) / "review.json").read_text(encoding="utf-8")
         )
         self.assertNotIn(candidate_id, json.dumps(public_manifest))
+        self.assertEqual("coherence", public_manifest["criterion"])
         self.assertEqual(
             {item["label"] for item in public_manifest["variants"]}, {"A", "B"}
         )

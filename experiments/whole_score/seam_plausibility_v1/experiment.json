@@ -1,0 +1,33 @@
+{
+  "schema_version": 1,
+  "experiment_id": "seam_plausibility_v1",
+  "structural_context_spec": "experiments/whole_score/structural_context_v4/experiment.json",
+  "expected_structural_context_spec_digest": "sha256:234fcf9ef62c57b77da6692b7d3ddd7e63ff080a787976e3b63b7213a0bb2020",
+  "checkpoint": "outputs/experiments/whole_score/structural_context_v4/checkpoint.pt",
+  "expected_checkpoint_digest": "sha256:f4d088c8fe07d09d0bc580f70fce87de03d097f39fc026602cc6f0a60dbd2571",
+  "study_template": "experiments/whole_score/seam_plausibility_v1/study/template.rb",
+  "source_authority": "../sigillum/symphony/movements/mvt4_merged/dsl/mvt4_storyteller_merged.rb",
+  "source_excerpts": {
+    "storyteller": "Movement IV bars 9-16, flute and clarinet",
+    "lament": "Movement IV bars 41-48, flute and clarinet",
+    "pulse": "Movement IV bars 61-68, flute and clarinet"
+  },
+  "cases": [
+    "storyteller",
+    "lament",
+    "pulse"
+  ],
+  "candidate_classes": [
+    "coherent_a",
+    "coherent_b",
+    "hard_alternative",
+    "discontinuous"
+  ],
+  "review_contrast": "Authentic coherent_a versus the boundary-matched hard_alternative in the same case; the immediate boundary baseline is tied, so the choice isolates the learned residual.",
+  "gross_control": "coherent_a versus the discontinuous candidate; auto-rejected and excluded from the human batch.",
+  "review_audio": "General MIDI (FluidSynth + FluidR3 GM) rendered from the exported MIDI; provision via `nix build nixpkgs#fluidsynth nixpkgs#soundfont-fluid` or SIGILLUM_FLUIDSYNTH / SIGILLUM_REVIEW_SOUNDFONT.",
+  "output_root": "outputs/experiments/whole_score/seam_plausibility_v1",
+  "review_root": "outputs/reviews/whole_score/seam_plausibility_v1",
+  "review_manifest": "outputs/reviews/whole_score/seam_plausibility_v1/review-manifest.json",
+  "review_tool": "tools/sigillum-review-ui"
+}

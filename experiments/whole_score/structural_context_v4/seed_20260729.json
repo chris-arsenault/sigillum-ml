@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_structural_context_matched_residual_v4_seed_20260729",
+  "observation_manifest": "outputs/datasets/whole_score/pilot_v1/manifest.json",
+  "expected_observation_manifest_digest": "sha256:c3f5434fc14126b77dbd83fe2dcd960d38db9e2ae76892934e7a57d3d3f2edb8",
+  "output_root": "outputs/experiments/whole_score/structural_context_v4/seed_20260729",
+  "seed": 20260729,
+  "task": {
+    "span_measures": 4,
+    "stride_measures": 4,
+    "minimum_negative_distance_measures": 12,
+    "maximum_examples_per_score": 48,
+    "negative_sampling": "boundary_matched_same_score"
+  },
+  "vectorizer": {
+    "maximum_parts": 48,
+    "onset_bins": 8,
+    "register_bins": 8,
+    "duration_ratio_boundaries": [
+      0.03125,
+      0.0625,
+      0.125,
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ]
+  },
+  "model": {
+    "measure_dimension": 64,
+    "span_dimension": 64,
+    "score_hidden_dimension": 64,
+    "dropout": 0.1,
+    "baseline_residual": true
+  },
+  "training": {
+    "steps": 400,
+    "batch_size": 64,
+    "learning_rate": 0.0003,
+    "weight_decay": 0.0001,
+    "validation_interval": 25,
+    "patience": 8,
+    "gradient_clip": 1.0,
+    "evaluation_batch_size": 256,
+    "evaluate_test": false
+  },
+  "selection_metric": "validation_score_macro_accuracy",
+  "baseline": "boundary_profile_distance"
+}

@@ -367,6 +367,7 @@ class SelectionRequest(_JsonDTO):
     action: Mapping[str, JsonValue]
     original_candidate_id: str
     assessments: tuple[Mapping[str, JsonValue], ...]
+    candidate_observations: Mapping[str, JsonValue] = MappingProxyType({})
 
     def __post_init__(self) -> None:
         _required_text(self.request_id, "request_id")
@@ -380,12 +381,41 @@ class SelectionRequest(_JsonDTO):
             "assessments",
             tuple(_freeze(_object(item, "assessment")) for item in self.assessments),
         )
+        object.__setattr__(
+            self,
+            "candidate_observations",
+            _freeze(
+                _object(self.candidate_observations, "candidate_observations")
+            ),
+        )
         if self.original_candidate_id != ORIGINAL_CANDIDATE_ID:
             raise ProtocolError("selection request does not expose the original")
         if not self.assessments:
             raise ProtocolError("selection request needs at least one assessment")
         if len(set(self.candidate_ids)) != len(self.candidate_ids):
             raise ProtocolError("selection candidate ids must be unique")
+        unknown_observations = (
+            set(self.candidate_observations) - set(self.candidate_ids)
+        )
+        if unknown_observations:
+            raise ProtocolError(
+                "selection observations name unknown candidates: "
+                + ", ".join(sorted(unknown_observations))
+            )
+        for candidate_id, raw_observation in self.candidate_observations.items():
+            observation = _object(
+                raw_observation,
+                f"candidate observation for {candidate_id}",
+            )
+            if observation.get("schema_version") != SCHEMA_VERSION:
+                raise ProtocolError(
+                    f"candidate observation for {candidate_id} has "
+                    "unsupported schema"
+                )
+            _digest(
+                observation.get("observation_digest"),
+                f"candidate observation digest for {candidate_id}",
+            )
 
     @property
     def candidate_ids(self) -> tuple[str, ...]:
@@ -411,6 +441,7 @@ class SelectionRequest(_JsonDTO):
                 action=data["action"],
                 original_candidate_id=data["original_candidate_id"],
                 assessments=tuple(_array(data["assessments"], "assessments")),
+                candidate_observations=data.get("candidate_observations", {}),
             )
         except KeyError as error:
             raise ProtocolError(f"selection request lacks {error.args[0]}") from error
@@ -429,6 +460,7 @@ class SelectionRequest(_JsonDTO):
             "action": _thaw(self.action),
             "original_candidate_id": self.original_candidate_id,
             "assessments": [_thaw(item) for item in self.assessments],
+            "candidate_observations": _thaw(self.candidate_observations),
         }
 
 
