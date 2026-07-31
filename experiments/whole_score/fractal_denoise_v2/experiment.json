@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "experiment_id": "whole_score_fractal_denoise_v2",
+  "supersedes": "whole_score_fractal_denoise_v1",
+  "pilot_manifest": "outputs/datasets/whole_score/pilot_v1/manifest.json",
+  "expected_pilot_manifest_digest": "sha256:c3f5434fc14126b77dbd83fe2dcd960d38db9e2ae76892934e7a57d3d3f2edb8",
+  "output_root": "outputs/experiments/whole_score/fractal_denoise_v2",
+  "hypothesis": "Modelling the onset roll as a DISCRETE Bernoulli field -- corrupt by surviving active onsets to silence, generate by revealing onsets from silence with class-balanced occupancy prediction -- fixes the phase-10 failure (a continuous Gaussian DDPM decoded ~200x too dense and lost to persistence). The discrete denoiser should reconstruct masked measures of held-out scores better than silence / marginal / persistence on both validation and the unseen-lineage test split, and generate unconditionally at a density and repetition close to authentic.",
+  "representation": {
+    "grid": "meter_normalized_onset_roll",
+    "channels": 1056,
+    "steps": 128,
+    "note": "Identical roll, families, and lineage splits as fractal_denoise_v1; only the diffusion formulation changes."
+  },
+  "model": {
+    "type": "discrete_bernoulli_diffusion",
+    "forward_process": "independent onset survival to silence with cosine abar (abar: ~1 clean -> ~0 silence)",
+    "reverse_process": "reveal-from-silence: predict occupancy p(x0=1|xt,t), reveal a schedule-controlled fraction of silent cells, keep survivors",
+    "objective": "class_balanced_bce_on_occupancy",
+    "backbone": "dilated_conv1d_film_resblocks",
+    "width": 192,
+    "depth": 8,
+    "diffusion_steps": 200,
+    "pos_weight": 50.0
+  },
+  "training": {
+    "epochs": 40,
+    "batch_size": 16,
+    "learning_rate": 0.0002,
+    "min_active_onsets_per_window": 8,
+    "split_source": "manifest lineage split (train 79 / validation 16 / test 15 scores)",
+    "cpu_threads_max": 3
+  },
+  "task": {
+    "name": "masked_measure_reconstruction",
+    "mask_measures": 2,
+    "conditioning": "context onsets held active every reverse step (RePaint-style anchor)"
+  },
+  "baselines": ["silence", "marginal_frequency", "persistence_time_copy"],
+  "metrics": [
+    "masked_region_active_cell_precision_recall_f1",
+    "held_out_lineage_generalization_validation_and_test",
+    "unconditional_density_vs_authentic",
+    "unconditional_repetition_rate_vs_authentic"
+  ],
+  "honesty": [
+    "Persistence (time-copy) on the unseen-lineage test split is the mandatory bar; phase-10 persistence was val F1 0.185 / test F1 0.109 under this exact harness.",
+    "Active-cell F1 on masked cells only; accuracy is meaningless on a 99.8%-empty roll.",
+    "Unconditional samples must land in the authentic density/repetition band; a model can win masked-F1 by copying anchored context yet still fail to generate, so both gates are reported.",
+    "This remains a generation primitive: no critic, selection policy, RL reward, or materialized audition is claimed here."
+  ]
+}

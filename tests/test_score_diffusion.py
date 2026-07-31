@@ -28,6 +28,7 @@ from generation.score_diffusion.model import (
     p_losses,
     sample,
 )
+from generation.score_diffusion import discrete as D
 
 
 def _score(n_measures=12, parts=None):
@@ -265,6 +266,65 @@ class EvaluateTests(unittest.TestCase):
             n_samples=3, limit_authentic=5)
         self.assertGreater(report["generated"]["density_mean"], report["authentic"]["density_mean"])
         tmp.cleanup()
+
+
+class DiscreteDiffusionTests(unittest.TestCase):
+    def test_survival_schedule_endpoints(self):
+        sched = D.make_survival_schedule(steps=50)
+        self.assertEqual(sched["steps"], 50)
+        self.assertGreater(float(sched["abar"][0]), 0.9)     # near clean at t=0
+        self.assertLess(float(sched["abar"][-1]), 0.05)      # near silence at t=T-1
+
+    def test_q_sample_is_subset_of_x0(self):
+        sched = D.make_survival_schedule(steps=20)
+        x0 = torch.zeros(3, R.CHANNELS, R.STEPS)
+        x0[:, ::7, ::5] = 1.0
+        t = torch.tensor([0, 10, 19])
+        xt = D.q_sample(x0, t, sched, generator=torch.Generator().manual_seed(0))
+        # Corruption only removes onsets, never invents them.
+        self.assertTrue(bool(((xt > 0) & (x0 < 0.5)).sum() == 0))
+        # Later timesteps keep fewer onsets than earlier ones (in expectation; here strong).
+        self.assertGreaterEqual(float(xt[0].sum()), float(xt[2].sum()))
+
+    def test_loss_finite_and_backward(self):
+        model = D.OccupancyDenoiser(width=32, depth=2)
+        sched = D.make_survival_schedule(steps=10)
+        x0 = torch.zeros(2, R.CHANNELS, R.STEPS)
+        x0[:, :30, ::4] = 1.0
+        loss = D.p_losses(model, x0, sched, pos_weight=20.0,
+                          generator=torch.Generator().manual_seed(1))
+        self.assertTrue(torch.isfinite(loss))
+        loss.backward()
+
+    def test_sample_binary_and_shape(self):
+        model = D.OccupancyDenoiser(width=32, depth=2)
+        sched = D.make_survival_schedule(steps=8)
+        out = D.sample(model, sched, n=1, device="cpu",
+                       generator=torch.Generator().manual_seed(2))
+        self.assertEqual(tuple(out.shape), (1, R.CHANNELS, R.STEPS))
+        self.assertTrue(set(torch.unique(out).tolist()).issubset({0.0, 1.0}))
+
+    def test_anchor_context_preserved(self):
+        model = D.OccupancyDenoiser(width=32, depth=2)
+        sched = D.make_survival_schedule(steps=8)
+        ctx = torch.zeros(1, R.CHANNELS, R.STEPS)
+        ctx[:, 5, 3] = 1.0
+        ctx[:, 40, 20] = 1.0
+        out = D.sample(model, sched, n=1, anchor=(ctx,), device="cpu",
+                       generator=torch.Generator().manual_seed(3))
+        # Every anchored context onset must remain active.
+        self.assertTrue(bool((out[ctx > 0] > 0.5).all()))
+
+    def test_reconstructor_returns_binary_full_grid(self):
+        model = D.OccupancyDenoiser(width=32, depth=2)
+        sched = D.make_survival_schedule(steps=6)
+        recon = D.discrete_reconstructor(model, sched)
+        context = np.zeros((R.CHANNELS, R.STEPS), dtype=np.float32)
+        context[5, :R.SUBDIV] = 1.0
+        mask = E.make_block_mask(mask_measures=2)
+        pred = recon(context, mask)
+        self.assertEqual(pred.shape, (R.CHANNELS, R.STEPS))
+        self.assertTrue(set(np.unique(pred).tolist()).issubset({0.0, 1.0}))
 
 
 if __name__ == "__main__":

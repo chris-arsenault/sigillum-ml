@@ -134,20 +134,26 @@ def unconditional_sampler(model, sched, device="cpu", generator=None):
 
 
 def compare_to_baselines(dataset, model, sched, *, mask_measures=2, limit=None, device="cpu",
-                         generator=None) -> dict:
-    """Full comparison table: model vs each baseline on the same masked windows + anti-collapse."""
+                         generator=None, reconstructor=None, sampler=None) -> dict:
+    """Full comparison table: model vs each baseline on the same masked windows + anti-collapse.
+
+    ``reconstructor`` / ``sampler`` let a caller supply a non-default predictor pair (e.g. the
+    discrete reveal-from-silence model). When omitted, the continuous DDPM reconstructor/sampler
+    are built from ``model`` and ``sched``.
+    """
     target_density = dataset.coverage()["mean_density"]
     marginals = dataset.channel_marginals()
+    if reconstructor is None:
+        reconstructor = model_reconstructor(model, sched, device=device, generator=generator)
+    if sampler is None:
+        sampler = unconditional_sampler(model, sched, device=device, generator=generator)
     results = {}
     for bl in B.default_baselines(marginals, target_density):
         results[bl.name] = evaluate_reconstruction(
             dataset, bl.predict, mask_measures=mask_measures, limit=limit)
     results["model"] = evaluate_reconstruction(
-        dataset, model_reconstructor(model, sched, device=device, generator=generator),
-        mask_measures=mask_measures, limit=limit)
-    results["anti_collapse"] = anti_collapse_report(
-        dataset, unconditional_sampler(model, sched, device=device, generator=generator),
-        limit_authentic=limit)
+        dataset, reconstructor, mask_measures=mask_measures, limit=limit)
+    results["anti_collapse"] = anti_collapse_report(dataset, sampler, limit_authentic=limit)
     results["beats_all_baselines"] = all(
         results["model"]["f1"] > results[name]["f1"] for name in ("silence", "marginal", "persistence"))
     return results
